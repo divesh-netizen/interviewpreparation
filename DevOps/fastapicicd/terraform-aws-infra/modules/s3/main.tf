@@ -3,16 +3,21 @@ resource "aws_s3_bucket" "terraform_state" {
   bucket        = var.s3_bucket_name
   force_destroy = false
 
-  versioning {
-    enabled = true
-  }
-
   lifecycle {
     prevent_destroy = true
   }
 
   tags = {
     Name = "${var.project_name}-terraform-state"
+  }
+}
+
+# ✅ Separate resource for versioning (Fix for Terraform Warning)
+resource "aws_s3_bucket_versioning" "terraform_state_versioning" {
+  bucket = aws_s3_bucket.terraform_state.id
+
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 

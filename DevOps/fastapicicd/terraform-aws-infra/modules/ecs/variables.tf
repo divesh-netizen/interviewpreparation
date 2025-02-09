@@ -30,7 +30,7 @@ variable "private_subnets" {
   description = "List of Private Subnets"
   type        = list(string)
 }
-variable "ecs_security_group" {
+variable "ecs_sg_id" {
   description = "ECS Security Group ID"
   type        = string
 }

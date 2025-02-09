@@ -39,7 +39,7 @@ module "ecs" {
   vpc_id               = module.vpc.vpc_id
   private_subnets      = module.vpc.private_subnet_ids
   alb_target_group_arn = module.alb.target_group_arn
-  ecs_security_group   = module.security.ecs_security_group_id
+  ecs_sg_id             = module.security.ecs_sg_id
   container_image      = "123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app:latest"
 
   ecs_task_cpu      = 512
@@ -48,7 +48,7 @@ module "ecs" {
 
   celery_broker_url     = var.redis_url
   celery_result_backend = var.celery_broker_url
-  database_url          = module.rds.database_url
+  database_url          = module.rds.rds_endpoint
 }
 
 
@@ -57,7 +57,7 @@ module "rds" {
   source            = "../../modules/rds"
   project_name      = var.project_name
   subnet_ids        = module.vpc.private_subnet_ids         # ✅ Fixing private_subnet_ids -> subnet_ids
-  security_group_id = module.security.rds_security_group_id # ✅ Fixing missing security group
+  security_group_id = module.security.rds_sg_id # ✅ Fixing missing security group
   db_username       = "admin"                               # ✅ Fixing username -> db_username
   db_password       = "SuperSecurePassword123!"             # ✅ Fixing password -> db_password
 }

@@ -1,5 +1,5 @@
 output "ecs_cluster_id" {
-  value = aws_ecs_cluster.main.id
+  value = aws_ecs_cluster.app_cluster.id
 }
 
 output "ecs_service_id" {
@@ -15,9 +15,9 @@ output "ecs_scaling_target_id" {
 }
 
 output "ecs_scaling_policy_out_id" {
-  value = aws_appautoscaling_policy.scale_out.id
+  value = aws_appautoscaling_policy.ecs_scale_up.id
 }
 
 output "ecs_scaling_policy_in_id" {
-  value = aws_appautoscaling_policy.scale_in.id
+  value = aws_appautoscaling_policy.ecs_scale_down.id
 }
