@@ -1,0 +1,237 @@
+## **Day 2: CI/CD Basics - Deep Dive**
+
+### **📌 Goal for Today**
+By the end of today, you should have a strong understanding of **Continuous Integration (CI)** and **Continuous Deployment/Delivery (CD)** concepts, different CI/CD tools, pipeline structure, and best practices.
+
+---
+
+## **🚀 1. What is CI/CD?**
+### **🔹 Continuous Integration (CI)**  
+- CI is the practice of **frequently integrating** code changes into a shared repository.
+- It automates **code testing and validation** to detect bugs early.
+- Ensures that new code **does not break the existing codebase**.
+
+**CI Process Flow:**
+1. Developer pushes code to the repository.
+2. Automated tests and static code analysis run.
+3. Build is triggered (Docker container, package, or binary).
+4. Artifacts are generated and stored.
+5. If everything is successful, the code is ready for deployment.
+
+### **🔹 Continuous Delivery (CD)**
+- Extends CI by **automating the release process**.
+- Code is always in a deployable state.
+- Requires manual approval for deployment to production.
+
+### **🔹 Continuous Deployment (CD)**
+- Fully automates deployment after passing tests.
+- No manual intervention; every approved commit goes directly to production.
+
+### **💡 Key Differences**
+| Feature | Continuous Integration | Continuous Delivery | Continuous Deployment |
+|---------|-----------------|-------------------|-------------------|
+| Code is merged frequently | ✅ | ✅ | ✅ |
+| Automated testing | ✅ | ✅ | ✅ |
+| Code is always deployable | ❌ | ✅ | ✅ |
+| Deployment is automatic | ❌ | ❌ | ✅ |
+
+---
+
+## **🔧 2. Popular CI/CD Tools**
+### **🛠 Self-Hosted CI/CD Tools**
+- **Jenkins**: Open-source, highly customizable with plugins.
+- **GitLab CI/CD**: Integrated directly into GitLab repositories.
+- **TeamCity**: JetBrains CI/CD tool with deep integration for enterprise projects.
+
+### **☁️ Cloud-Based CI/CD Tools**
+- **GitHub Actions**: Integrated with GitHub, uses YAML-based workflows.
+- **Bitbucket Pipelines**: Directly integrated with Bitbucket repositories.
+- **CircleCI**: Focused on scalability and speed.
+- **Travis CI**: One of the first cloud CI/CD tools, easy YAML configuration.
+
+#### **💡 Choosing the Right Tool**
+- Use **Jenkins/GitLab CI/CD** for enterprise-grade, self-hosted, and highly customizable pipelines.
+- Use **GitHub Actions/Bitbucket Pipelines** for seamless integration with repositories.
+- Use **CircleCI/Travis CI** for simple, cloud-native automation.
+
+---
+
+## **📜 3. Anatomy of a CI/CD Pipeline**
+Every CI/CD pipeline follows these key **stages**:
+
+### **1️⃣ Source Code Management (SCM)**
+- **Trigger:** CI/CD is triggered when code is pushed/merged.
+- **Supported SCMs:** GitHub, GitLab, Bitbucket, AWS CodeCommit.
+
+### **2️⃣ Build Stage**
+- Compiles code, resolves dependencies, and generates artifacts.
+- Example: Building a Docker image, compiling Java code.
+
+### **3️⃣ Testing Stage**
+- Runs unit, integration, and functional tests.
+- Static code analysis (e.g., SonarQube).
+- Example: `pytest`, `JUnit`, `Selenium`.
+
+### **4️⃣ Deployment Stage**
+- Deploys code to staging or production.
+- Can use Kubernetes, AWS ECS, Azure App Services, etc.
+
+### **5️⃣ Monitoring & Alerts**
+- **Tools:** Prometheus, Grafana, New Relic, ELK stack.
+- **Error handling:** Rollbacks if deployment fails.
+
+---
+
+## **🔹 4. YAML-Based CI/CD Pipelines**
+Most modern CI/CD tools (GitHub Actions, GitLab CI, Bitbucket Pipelines) use **YAML configuration**.
+
+Example **GitHub Actions** Workflow:
+
+```yaml
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest tests/
+```
+
+---
+
+## **🛠 5. Hands-On: Setting Up a CI/CD Pipeline**
+### **🎯 Goal**
+We will create a simple CI/CD pipeline for a **FastAPI/Node.js application** using **GitHub Actions**.
+
+### **Step 1: Create a `.github/workflows/ci.yml` File**
+For a **FastAPI project**:
+```yaml
+name: FastAPI CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest tests/
+```
+
+For a **Node.js project**:
+```yaml
+name: Node.js CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+```
+
+### **Step 2: Configure Environment Variables**
+In **GitHub Actions**, set up **secrets** for sensitive data like API keys.
+
+1. Go to **GitHub Repository → Settings → Secrets**.
+2. Add **AWS_ACCESS_KEY_ID**, **AWS_SECRET_ACCESS_KEY**, etc.
+3. Modify your workflow to use secrets:
+   ```yaml
+   env:
+     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+   ```
+
+### **Step 3: Deployment to AWS ECS**
+1. Build Docker Image:
+   ```yaml
+   - name: Build Docker Image
+     run: |
+       docker build -t my-app:latest .
+   ```
+2. Push to AWS ECR:
+   ```yaml
+   - name: Push to AWS ECR
+     run: |
+       aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <your-ecr-repo>
+       docker tag my-app:latest <your-ecr-repo>:latest
+       docker push <your-ecr-repo>:latest
+   ```
+3. Deploy to ECS:
+   ```yaml
+   - name: Deploy to AWS ECS
+     run: |
+       aws ecs update-service --cluster my-cluster --service my-service --force-new-deployment
+   ```
+
+---
+
+## **⚡ 6. CI/CD Best Practices**
+✅ Use **feature branches** and **pull requests**.  
+✅ Automate **testing and security checks**.  
+✅ Store **secrets securely** using environment variables.  
+✅ Implement **rollback strategies** (e.g., Blue-Green Deployment).  
+✅ Use **monitoring tools** (Grafana, Prometheus, ELK Stack).  
+
+---
+
+## **🎯 Summary for Today**
+1. **CI/CD Overview** (CI vs. CD, benefits, best practices).  
+2. **Popular CI/CD Tools** (Jenkins, GitHub Actions, GitLab CI, CircleCI).  
+3. **CI/CD Pipeline Stages** (Source, Build, Test, Deploy, Monitor).  
+4. **YAML-Based Pipelines** (GitHub Actions example).  
+5. **Hands-on Project** (Set up FastAPI/Node.js pipeline with GitHub Actions).  
+6. **CI/CD Best Practices** (Security, rollback strategies, monitoring).  
+
+---

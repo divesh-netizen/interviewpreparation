@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: staging/Dockerfile.staging
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - ../.env.staging
+    ports:
+      - "8000:8000"
+    command: ["/entrypoint.sh"]
+
+  worker:
+    build:
+      context: ..
+      dockerfile: staging/Dockerfile.staging
+    depends_on:
+      - redis
+    env_file:
+      - ../.env.staging
+    command: ["celery", "-A", "worker.celery_app", "worker", "--loglevel=debug"]
+
+  redis:
+    image: "redis:alpine"
+    restart: always
+    ports:
+      - "6379:6379"
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"

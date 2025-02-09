@@ -1,0 +1,124 @@
+# ------------------------
+# General Ignore
+# ------------------------
+*.log
+*.out
+*.pid
+*.swp
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+*.cache
+.vscode/
+.idea/
+*.iml
+
+# ------------------------
+# Python Ignore
+# ------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.envrc
+.venv/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+poetry.lock
+Pipfile
+Pipfile.lock
+
+# ------------------------
+# Terraform Ignore
+# ------------------------
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+*.tfvars.json
+crash.log
+override.tf
+override.tf.json
+*.auto.tfvars
+
+# ------------------------
+# Docker Ignore
+# ------------------------
+docker-compose.override.yml
+.dockerignore
+*.dockerfile~
+docker_build_cache/
+*.tar
+*.img
+
+# ------------------------
+# AWS Ignore (Security)
+# ------------------------
+.aws/
+*.pem
+*.key
+credentials
+config
+terraform.tfstate.d/
+aws-exports.js
+
+# ------------------------
+# ECS, CI/CD, and Jenkins Ignore
+# ------------------------
+ecs-deploy/
+deployments/
+workspace/
+jenkins_home/
+cicd-artifacts/
+coverage/
+test-reports/
+node_modules/
+dist/
+build/
+*.swp
+*.swo
+
+# ------------------------
+# FastAPI Specific Ignore
+# ------------------------
+*.db
+alembic/versions/*.pyc
+alembic.ini
+celerybeat-schedule
+*.sqlite3
+*.sqlite
+
+# ------------------------
+# Logs and Debugging
+# ------------------------
+logs/
+*.log
+nohup.out
+debug.log
+pytest_debug.log
+
+# ------------------------
+# Local Secrets & Config Files
+# ------------------------
+*.secret
+*.envrc
+.env.local
+.env.development
+.env.production
+.env.testing
+.env.staging
+.env.example
+config/settings_local.py
+settings.pyc
+
+# ------------------------
+# IDE and Editor Configurations
+# ------------------------
+.vscode/
+.idea/
+*.iml
+
